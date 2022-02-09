@@ -1,7 +1,7 @@
 package echo.util;
 
 abstract BitMask(Int) to Int {
-  
+
   @:from
   public static function from_int(i:Int):BitMask {
     return new BitMask(1 << i);
@@ -27,5 +27,9 @@ abstract BitMask(Int) to Int {
 
   public inline function is_empty():Bool {
     return this == 0;
+  }
+
+  public inline function setFromInt(i:Int) {
+    return this = i;
   }
 }
