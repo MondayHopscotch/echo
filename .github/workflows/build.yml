@@ -16,4 +16,4 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: AustinEast/echo/.github/composites/build@master
+      - uses: AustinEast/echo/.github/composites/build@workflow-test
