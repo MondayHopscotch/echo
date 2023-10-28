@@ -16,4 +16,4 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: AustinEast/echo/.github/composites/build@workflow-test
+      - uses: MondayHopscotch/echo/.github/composites/build@workflow-test
