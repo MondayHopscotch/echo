@@ -1,5 +1,6 @@
 package;
 
+import hxd.Window;
 import hxd.Key;
 import echo.Echo;
 import echo.World;
@@ -49,6 +50,7 @@ class Main extends BaseApp {
       PolygonState, StackingState, MultiShapeState, ShapesState, GroupsState, StaticState, LinecastState, Linecast2State, TileMapState, TileMapState2,
       BezierState, VerletState
     ];
+
     index = 0;
     // Create a State Manager and pass it the World and the first Sample
     fsm = new FSM<World>(world, Type.createInstance(sample_states[index], []));
@@ -86,8 +88,8 @@ class Main extends BaseApp {
     var fdt = Key.isDown(Key.SHIFT) ? dt * 0.3 : dt;
     // Update the current Sample State
     fsm.step(fdt);
-    // Step the World Forward
-    if (playing) world.step(fdt);
+    // Step the World Forward, with a fixed step rate of 60 per second
+    if (playing) world.step(fdt, 60);
 
     // Update GUI text
     members_text.text = 'Bodies: ${world.count}';
