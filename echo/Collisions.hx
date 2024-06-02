@@ -188,7 +188,7 @@ class Collisions {
   static var sqr:Array<QuadTreeData> = [];
 
   public static function overlap_body_and_bodies_bounds(body:Body, bodies:Array<Body>, world:World, results:Array<Collision>) {
-    if (body.disposed || body.shapes.length == 0 || !body.active || body.is_static()) return;
+    if (body.disposed || body.shapes.length == 0 || !body.active) return;
     var bounds = body.bounds();
     qr.resize(0);
     sqr.resize(0);
