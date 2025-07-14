@@ -79,16 +79,23 @@ class Physics {
    */
   public static inline function resolve(a:Body, b:Body, cd:CollisionData, correction_threshold:Float = 0.013, percent_correction:Float = 0.9,
       advanced:Bool = false) {
+    // trace('resolving: ${cd}');
+
     // Do not resolve if either objects arent solid
     if (!cd.sa.solid || !cd.sb.solid || !a.active || !b.active || a.disposed || b.disposed || a.is_static() && b.is_static()) return;
 
+    // trace('calcin vel');
     // Calculate relative velocity
     var rvx = a.velocity.x - b.velocity.x;
     var rvy = a.velocity.y - b.velocity.y;
 
+    // trace('rv: ${rvx}, ${rvy}');
+
     // Calculate relative velocity in terms of the normal direction
     var vel_to_normal = rvx * cd.normal.x + rvy * cd.normal.y;
     var inv_mass_sum = a.inverse_mass + b.inverse_mass;
+
+    // trace('vel_to_normal: ${vel_to_normal}');
 
     // Do not resolve if velocities are separating
     if (vel_to_normal > 0) {
@@ -99,6 +106,8 @@ class Physics {
       var j = (-(1 + e) * vel_to_normal) / inv_mass_sum;
       var impulse_x = -j * cd.normal.x;
       var impulse_y = -j * cd.normal.y;
+
+      // trace('impulse: ${impulse_x}, ${impulse_y}');
 
       // Apply impulse
       var mass_sum = a.mass + b.mass;
@@ -122,6 +131,7 @@ class Physics {
       }
     }
 
+    // trace('check correction');
     // Provide some positional correction to the objects to help prevent jitter
     var correction = (Math.max(cd.overlap - correction_threshold, 0) / inv_mass_sum) * percent_correction;
     var cx = correction * cd.normal.x;

@@ -27,7 +27,7 @@ class Shape #if cog implements cog.IComponent #end {
       case RECT:
         s = Rect.get(options.offset_x, options.offset_y, options.width, options.height, options.rotation, options.scale_x, options.scale_y);
       case CIRCLE:
-        s = Circle.get(options.offset_x, options.offset_y, options.radius, options.rotation, options.scale_x, options.scale_y);
+        s = Circle.get(options.offset_x, options.offset_y, options.radius, options.rotation, options.scale_x, options.scale_y, options.inverted);
       case POLYGON:
         if (options.vertices != null) s = Polygon.get_from_vertices(options.offset_x, options.offset_y, options.rotation, options.vertices, options.scale_x,
           options.scale_y);

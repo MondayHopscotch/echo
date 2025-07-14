@@ -18,6 +18,10 @@ class Circle extends Shape implements Poolable {
    */
   public var diameter(get, set):Float;
   /**
+   * If inverted, collisions occur when an object goes outside the radius
+   */
+  public var inverted(default, set):Bool;
+  /**
    * The local radius of the Circle, which represents the Circle's radius with no transformations.
    */
   public var local_radius:Float;
@@ -29,9 +33,11 @@ class Circle extends Shape implements Poolable {
    * @param rotation
    * @return Circle
    */
-  public static inline function get(x:Float = 0, y:Float = 0, radius:Float = 1, rotation:Float = 0, scale_x:Float = 1, scale_y:Float = 1):Circle {
+  public static inline function get(x:Float = 0, y:Float = 0, radius:Float = 1, rotation:Float = 0, scale_x:Float = 1, scale_y:Float = 1,
+      inverted:Bool = false):Circle {
     var circle = pool.get();
     circle.set(x, y, radius, rotation, scale_x, scale_y);
+    circle.inverted = inverted;
     circle.pooled = false;
     return circle;
   }
@@ -116,6 +122,11 @@ class Circle extends Shape implements Poolable {
 
   inline function set_diameter(value:Float):Float {
     radius = value * 0.5;
+    return value;
+  }
+
+  function set_inverted(value:Bool):Bool {
+    inverted = value;
     return value;
   }
 }

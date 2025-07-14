@@ -259,24 +259,53 @@ class SAT {
     var ny = sb.y - sa.y;
     // radii of circles
     var r = sa.radius + sb.radius;
+    // radii difference (acts as our boundary check for inverted collisions)
+    var rBoundary = Math.abs(sa.radius - sb.radius);
     // length squared
     var d = nx * nx + ny * ny;
 
     var col:CollisionData = null;
 
-    // Do quick check if circles are colliding
-    if (d >= r * r) return col;
-    // If distance between circles is zero, make up a number
-    else if (d.equals(0)) {
-      col = CollisionData.get(sa.radius, 1, 0);
+    if (sa.inverted && sb.inverted) {
+      // cannot collide two inverted circles
+      return col;
+    }
+    if (sb.inverted) {
+      // Do quick check if circles are colliding
+      if (d <= rBoundary * rBoundary) return col;
+        // // If circles are entirely outside of each other
+        // else if (d >= r * r) {
+        //   col = CollisionData.get(Math.min(sa.radius, sb.radius), 1, 0);
+      // }
+      else {
+        // Get actual square root
+        d = Math.sqrt(d);
+        // Distance is difference between distance and the radius boundary
+        // normalize our vector
+        nx /= d;
+        ny /= d;
+        col = CollisionData.get(d - rBoundary, -nx, -ny);
+        // trace(rBoundary);
+        // trace(d);
+        trace(col);
+      }
     }
     else {
-      // Get actual square root
-      d = Math.sqrt(d);
-      // Distance is difference between radius and distance
-      nx /= d;
-      ny /= d;
-      col = CollisionData.get(r - d, nx, ny);
+      // Do quick check if circles are colliding
+      if (d >= r * r) return col;
+      else if (d.equals(0)) {
+        // If distance between circles is zero, make up a number
+        col = CollisionData.get(sa.radius, 1, 0);
+      }
+      else {
+        // Get actual square root
+        d = Math.sqrt(d);
+        // Distance is difference between radius and distance
+        nx /= d;
+        ny /= d;
+        col = CollisionData.get(r - d, nx, ny);
+        // trace(col);
+      }
     }
 
     col.sa = sa;
@@ -318,7 +347,6 @@ class SAT {
     data1.put();
     return data2;
   }
-
   /**
    * Test a Rect and a Circle for a Collision.
    * @param r

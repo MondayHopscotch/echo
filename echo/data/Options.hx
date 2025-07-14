@@ -233,6 +233,10 @@ typedef ShapeOptions = {
    */
   var ?radius:Float;
   /**
+   * If the Shape is a Circle, this can flip which side of the circle is the collision surface
+   */
+  var ?inverted:Bool;
+  /**
    * If the Shape is a Rect, it's width will be taken from this value. Otherwise this is ignored.
    *
    * If this value is set and height isnt, the Rect will use this value for it's height.
