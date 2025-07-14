@@ -13,7 +13,7 @@ class CircleState extends BaseState {
     Main.instance.state_text.text = "Sample: Circles";
 
     // Create a material for all the shapes to share
-    var material:Material = {elasticity: 0.7};
+    var material:Material = {elasticity: 0.9};
 
     // Add a bunch of random Physics Bodies to the World
     for (i in 0...body_count) {

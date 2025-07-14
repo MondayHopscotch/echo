@@ -270,13 +270,9 @@ class SAT {
       // cannot collide two inverted circles
       return col;
     }
-    if (sb.inverted) {
+    else if (sb.inverted || sa.inverted) {
       // Do quick check if circles are colliding
       if (d <= rBoundary * rBoundary) return col;
-        // // If circles are entirely outside of each other
-        // else if (d >= r * r) {
-        //   col = CollisionData.get(Math.min(sa.radius, sb.radius), 1, 0);
-      // }
       else {
         // Get actual square root
         d = Math.sqrt(d);

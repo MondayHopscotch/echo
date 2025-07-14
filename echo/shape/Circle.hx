@@ -26,7 +26,7 @@ class Circle extends Shape implements Poolable {
    */
   public var local_radius:Float;
   /**
-   * Gets a Cirlce from the pool, or creates a new one if none are available. Call `put()` on the Cirlce to place it back in the pool.
+   * Gets a Circle from the pool, or creates a new one if none are available. Call `put()` on the Circle to place it back in the pool.
    * @param x
    * @param y
    * @param radius
