@@ -165,7 +165,7 @@ class Rect extends Shape implements Poolable {
 
   override inline function intersect(l:Line):Null<IntersectionData> return this.rect_intersects(l);
 
-  override inline function overlaps(s:Shape):Bool {
+  override function overlaps(s:Shape):Bool {
     var cd = transformed_rect == null ? s.collides(this) : transformed_rect.collides(this);
     if (cd != null) {
       cd.put();
@@ -174,13 +174,13 @@ class Rect extends Shape implements Poolable {
     return false;
   }
 
-  override inline function collides(s:Shape):Null<CollisionData> return s.collide_rect(this, true);
+  override function collides(s:Shape):Null<CollisionData> return s.collide_rect(this, true);
 
-  override inline function collide_rect(r:Rect, flip:Bool = false):Null<CollisionData> return this.rect_and_rect(r, flip);
+  override function collide_rect(r:Rect, flip:Bool = false):Null<CollisionData> return this.rect_and_rect(r, flip);
 
-  override inline function collide_circle(c:Circle, flip:Bool = false):Null<CollisionData> return this.rect_and_circle(c, flip);
+  override function collide_circle(c:Circle, flip:Bool = false):Null<CollisionData> return this.rect_and_circle(c, flip);
 
-  override inline function collide_polygon(p:Polygon, flip:Bool = false):Null<CollisionData> return this.rect_and_polygon(p, flip);
+  override function collide_polygon(p:Polygon, flip:Bool = false):Null<CollisionData> return this.rect_and_polygon(p, flip);
 
   override function set_parent(?body:Body) {
     super.set_parent(body);

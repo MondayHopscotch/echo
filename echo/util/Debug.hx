@@ -96,12 +96,16 @@ class Debug {
         }
       case ARC_TILE:
         var a:ArcTile = cast shape;
-
-        trace('drawing arcTile');
-        draw_rect_helper(a, shape_pos);
-        draw_bezier(a.arc, shape_pos);
-        // draw_circle_helper(a.arc, shape_pos + a.arc.get_position());
+        draw_arc_tile(a, shape_pos);
     }
+  }
+
+  function draw_arc_tile(a:ArcTile, shape_pos:Vector2) {
+    draw_line(shape_pos.x - a.width * 0.5, shape_pos.y - a.height * 0.5, shape_pos.x - a.width * 0.5, shape_pos.y + a.height * 0.5,
+      a.collided ? shape_collided_color : shape_color);
+    draw_line(shape_pos.x - a.width * 0.5, shape_pos.y + a.height * 0.5, shape_pos.x + a.width * 0.5, shape_pos.y + a.height * 0.5,
+      a.collided ? shape_collided_color : shape_color);
+    draw_bezier(a.arc, shape_pos, a.collided ? shape_collided_color : shape_color, true);
   }
 
   function draw_rect_helper(r:Rect, shape_pos:Vector2) {
@@ -151,39 +155,47 @@ class Debug {
     draw_line(vertices[vl].x, vertices[vl].y, vertices[0].x, vertices[0].y, stroke, 1);
   }
 
-  public function draw_bezier(bezier:Bezier, shape_pos:Vector2 = null, draw_control_points:Bool = false, draw_segment_markers:Bool = false,
+  public function draw_bezier(bezier:Bezier, shape_pos:Vector2 = null, color:Int = -1, draw_control_points:Bool = false, draw_segment_markers:Bool = false,
       draw_lines:Bool = true) {
+    if (shape_pos == null) {
+      shape_pos = Vector2.zero;
+    }
+    if (color == -1) {
+      color = intersection_color;
+    }
     var max_control_points = bezier.curve_count * bezier.curve_mode;
     // Draw Control Point Tangent Lines
-    if (draw_control_points && bezier.curve_mode != Linear) for (i in 0...bezier.curve_count) {
-      var index = i * bezier.curve_mode;
-      if (i > 0 && index + bezier.curve_mode > max_control_points) break;
-      switch bezier.curve_mode {
-        case Cubic:
-          var p1 = bezier.get_control_point(index);
-          var p2 = bezier.get_control_point(index + 1);
-          var p3 = bezier.get_control_point(index + 2);
-          var p4 = bezier.get_control_point(index + 3);
-          if (p1 != null && p2 != null) draw_line(p1.x, p1.y, p2.x, p2.y, shape_collided_color);
-          if (p3 != null && p4 != null) draw_line(p3.x, p3.y, p4.x, p4.y, shape_collided_color);
-        case Quadratic:
-          var p1 = bezier.get_control_point(index);
-          var p2 = bezier.get_control_point(index + 1);
-          var p3 = bezier.get_control_point(index + 2);
-          if (p1 != null && p2 != null) draw_line(p1.x, p1.y, p2.x, p2.y, shape_collided_color);
-          if (p2 != null && p3 != null) draw_line(p2.x, p2.y, p3.x, p3.y, shape_collided_color);
-        default:
+    if (draw_control_points && bezier.curve_mode != Linear) {
+      for (i in 0...bezier.curve_count) {
+        var index = i * bezier.curve_mode;
+        if (i > 0 && index + bezier.curve_mode > max_control_points) break;
+        switch bezier.curve_mode {
+          case Cubic:
+            var p1 = bezier.get_control_point(index);
+            var p2 = bezier.get_control_point(index + 1);
+            var p3 = bezier.get_control_point(index + 2);
+            var p4 = bezier.get_control_point(index + 3);
+            if (p1 != null && p2 != null) draw_line(p1.x + shape_pos.x, p1.y + shape_pos.y, p2.x + shape_pos.x, p2.y + shape_pos.y, shape_collided_color);
+            if (p3 != null && p4 != null) draw_line(p3.x + shape_pos.x, p3.y + shape_pos.y, p4.x + shape_pos.x, p4.y + shape_pos.y, shape_collided_color);
+          case Quadratic:
+            var p1 = bezier.get_control_point(index);
+            var p2 = bezier.get_control_point(index + 1);
+            var p3 = bezier.get_control_point(index + 2);
+            if (p1 != null && p2 != null) draw_line(p1.x + shape_pos.x, p1.y + shape_pos.y, p2.x + shape_pos.x, p2.y + shape_pos.y, shape_collided_color);
+            if (p2 != null && p3 != null) draw_line(p2.x + shape_pos.x, p2.y + shape_pos.y, p3.x + shape_pos.x, p3.y + shape_pos.y, shape_collided_color);
+          default:
+        }
       }
     }
 
     // Draw the Curve
     for (l in bezier.lines) {
-      if (draw_lines) draw_line(l.start.x + shape_pos.x, l.start.y + shape_pos.y, l.end.x + shape_pos.x, l.end.y + shape_pos.y, intersection_color);
+      if (draw_lines) draw_line(l.start.x + shape_pos.x, l.start.y + shape_pos.y, l.end.x + shape_pos.x, l.end.y + shape_pos.y, color);
 
       if (draw_segment_markers) {
         var p = l.point_along_ratio(.5);
         var edge = Line.get_from_vector(p, l.radians.rad_to_deg() - 90, 5);
-        draw_line(edge.start.x, edge.start.y, edge.end.x, edge.end.y, intersection_overlap_color);
+        draw_line(edge.start.x + shape_pos.x, edge.start.y + shape_pos.y, edge.end.x + shape_pos.x, edge.end.y + shape_pos.y, intersection_overlap_color);
         edge.put();
       }
     }
@@ -191,7 +203,7 @@ class Debug {
     // Draw the Control Points
     if (draw_control_points) for (i in 0...bezier.control_count) {
       var p = bezier.get_control_point(i);
-      draw_circle(p.x, p.y, 4, shape_fill_color);
+      draw_circle(p.x + shape_pos.x, p.y + shape_pos.y, 4, shape_fill_color);
     }
   }
 

@@ -64,6 +64,10 @@ abstract Vector2(Vector2Type) from Vector2Type to Vector2Type {
 
   public inline function new(x:Float, y:Float) @:privateAccess this = new Vector2Type(x, y);
 
+  public function cross(b:Vector2):Float {
+    return this.x * b.x - this.y * b.y;
+  }
+
   // region operator overloads
 
   @:op([])
@@ -329,8 +333,8 @@ overload extern inline function rotate(v:Vector2, radians:Float, pivot:Vector2):
   var dx = v.x - pivot.x;
   var dy = v.y - pivot.y;
 
-  v.x = dx * cos - dy * sin;
-  v.y = dx * sin + dy * cos;
+  v.x = pivot.x + (dx * cos - dy * sin);
+  v.y = pivot.y + (dx * sin + dy * cos);
 
   return v;
 }

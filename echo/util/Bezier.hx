@@ -1,5 +1,6 @@
 package echo.util;
 
+import echo.data.Data.IntersectionData;
 import echo.util.Disposable;
 import echo.math.Vector2;
 
@@ -464,6 +465,31 @@ class Bezier implements Disposable {
           control_points[start_index + 1].y, control_points[start_index + 2].x, control_points[start_index + 2].y, control_points[start_index + 3].x,
           control_points[start_index + 3].y);
     };
+  }
+
+  public function overlaps(s:Shape) {
+    return collides(s) != null;
+  }
+
+  // TODO: Need to make this return collision data, instead
+  public function collides(s:Shape):Null<IntersectionData> {
+    // var closest:IntersectionData = null;
+    // var result:IntersectionData = null;
+    // for (l in lines) {
+    //   switch s.type {
+    //     case RECT:
+    //       result = SAT.line_intersects_rect(l, cast s);
+    //     case CIRCLE:
+    //       result = SAT.line_intersects_circle(l, cast s);
+    //     case POLYGON:
+    //       result = SAT.line_intersects_polygon(l, cast s);
+    //     case ARC_TILE:
+    //       // TODO
+    //   }
+    //   if (closest == null || result != null && result.distance < closest.distance) closest = result;
+    // }
+    // return closest;
+    return null;
   }
 
   public function get_point_at_length(length:Float):Null<Vector2> {
