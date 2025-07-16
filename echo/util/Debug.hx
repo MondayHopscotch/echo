@@ -81,26 +81,10 @@ class Debug {
     switch (shape.type) {
       case RECT:
         var r:Rect = cast shape;
-        if (r.transformed_rect != null && r.rotation != 0) {
-          draw_polygon(r.transformed_rect.count, r.transformed_rect.vertices, shape_fill_color, r.collided ? shape_collided_color : shape_color,
-            shape_fill_alpha);
-          if (draw_shape_bounds) {
-            var b = r.transformed_rect.bounds();
-            draw_rect(b.min_x, b.min_y, b.width, b.height, shape_fill_color, r.collided ? shape_collided_color : shape_color, 0);
-            b.put();
-          }
-        }
-        else draw_rect(shape_pos.x - r.width * 0.5, shape_pos.y - r.height * 0.5, r.width, r.height, shape_fill_color,
-          r.collided ? shape_collided_color : shape_color, 0);
+        draw_rect_helper(r, shape_pos);
       case CIRCLE:
         var c:Circle = cast shape;
-
-        draw_circle(shape_pos.x, shape_pos.y, c.radius, shape_fill_color, shape.collided ? shape_collided_color : shape_color, shape_fill_alpha);
-        if (draw_shape_bounds) {
-          var b = c.bounds();
-          draw_rect(b.min_x, b.min_y, b.width, b.height, shape_fill_color, shape.collided ? shape_collided_color : shape_color, 0);
-          b.put();
-        }
+        draw_circle_helper(c, shape_pos);
       case POLYGON:
         var p:Polygon = cast shape;
 
@@ -110,6 +94,35 @@ class Debug {
           draw_rect(b.min_x, b.min_y, b.width, b.height, shape_fill_color, shape.collided ? shape_collided_color : shape_color, 0);
           b.put();
         }
+      case ARC_TILE:
+        var a:ArcTile = cast shape;
+
+        trace('drawing arcTile');
+        draw_rect_helper(a, shape_pos);
+        draw_bezier(a.arc, shape_pos);
+        // draw_circle_helper(a.arc, shape_pos + a.arc.get_position());
+    }
+  }
+
+  function draw_rect_helper(r:Rect, shape_pos:Vector2) {
+    if (r.transformed_rect != null && r.rotation != 0) {
+      draw_polygon(r.transformed_rect.count, r.transformed_rect.vertices, shape_fill_color, r.collided ? shape_collided_color : shape_color, shape_fill_alpha);
+      if (draw_shape_bounds) {
+        var b = r.transformed_rect.bounds();
+        draw_rect(b.min_x, b.min_y, b.width, b.height, shape_fill_color, r.collided ? shape_collided_color : shape_color, 0);
+        b.put();
+      }
+    }
+    else draw_rect(shape_pos.x - r.width * 0.5, shape_pos.y - r.height * 0.5, r.width, r.height, shape_fill_color,
+      r.collided ? shape_collided_color : shape_color, 0);
+  }
+
+  function draw_circle_helper(c:Circle, shape_pos:Vector2) {
+    draw_circle(shape_pos.x, shape_pos.y, c.radius, shape_fill_color, c.collided ? shape_collided_color : shape_color, shape_fill_alpha);
+    if (draw_shape_bounds) {
+      var b = c.bounds();
+      draw_rect(b.min_x, b.min_y, b.width, b.height, shape_fill_color, c.collided ? shape_collided_color : shape_color, 0);
+      b.put();
     }
   }
 
@@ -138,7 +151,8 @@ class Debug {
     draw_line(vertices[vl].x, vertices[vl].y, vertices[0].x, vertices[0].y, stroke, 1);
   }
 
-  public function draw_bezier(bezier:Bezier, draw_control_points:Bool = false, draw_segment_markers:Bool = false, draw_lines:Bool = true) {
+  public function draw_bezier(bezier:Bezier, shape_pos:Vector2 = null, draw_control_points:Bool = false, draw_segment_markers:Bool = false,
+      draw_lines:Bool = true) {
     var max_control_points = bezier.curve_count * bezier.curve_mode;
     // Draw Control Point Tangent Lines
     if (draw_control_points && bezier.curve_mode != Linear) for (i in 0...bezier.curve_count) {
@@ -164,7 +178,7 @@ class Debug {
 
     // Draw the Curve
     for (l in bezier.lines) {
-      if (draw_lines) draw_line(l.start.x, l.start.y, l.end.x, l.end.y, intersection_color);
+      if (draw_lines) draw_line(l.start.x + shape_pos.x, l.start.y + shape_pos.y, l.end.x + shape_pos.x, l.end.y + shape_pos.y, intersection_color);
 
       if (draw_segment_markers) {
         var p = l.point_along_ratio(.5);

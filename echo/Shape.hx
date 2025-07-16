@@ -32,6 +32,8 @@ class Shape #if cog implements cog.IComponent #end {
         if (options.vertices != null) s = Polygon.get_from_vertices(options.offset_x, options.offset_y, options.rotation, options.vertices, options.scale_x,
           options.scale_y);
         else s = Polygon.get(options.offset_x, options.offset_y, options.sides, options.radius, options.rotation, options.scale_x, options.scale_y);
+      case ARC_TILE:
+        s = ArcTile.get(options.offset_x, options.offset_y, options.width, options.height, options.rotation, options.scale_x, options.scale_y);
     }
     s.solid = options.solid;
     return s;
@@ -217,6 +219,7 @@ class Shape #if cog implements cog.IComponent #end {
       case RECT: 'rect';
       case CIRCLE: 'circle';
       case POLYGON: 'polygon';
+      case ARC_TILE: 'arcTile';
     }
     return 'Shape: {type: $s, x: $x, y: $y, rotation: $rotation}';
   }

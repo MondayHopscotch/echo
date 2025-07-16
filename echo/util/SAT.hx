@@ -283,7 +283,7 @@ class SAT {
         col = CollisionData.get(d - rBoundary, -nx, -ny);
         // trace(rBoundary);
         // trace(d);
-        trace(col);
+        // trace(col);
       }
     }
     else {

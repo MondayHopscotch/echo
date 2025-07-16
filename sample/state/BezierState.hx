@@ -82,7 +82,7 @@ class BezierState extends BaseState {
     }
 
     // Draw the Bezier Curve
-    Main.instance.debug.draw_bezier(bezier, true, true);
+    Main.instance.debug.draw_bezier(bezier, null, true, true);
 
     // Move the linecasting Line
     var c = parent.center();

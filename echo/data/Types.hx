@@ -9,6 +9,7 @@ enum abstract ShapeType(Int) from Int to Int {
   var RECT;
   var CIRCLE;
   var POLYGON;
+  var ARC_TILE;
 }
 
 enum abstract ForceType(Int) from Int to Int {

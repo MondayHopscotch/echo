@@ -47,6 +47,7 @@ class Main extends BaseApp {
 
     // Set up our Sample States
     sample_states = [
+      ArcTileState,
       CircleState,
       PolygonState,
       StackingState,
