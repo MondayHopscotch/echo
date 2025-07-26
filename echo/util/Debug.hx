@@ -101,11 +101,24 @@ class Debug {
   }
 
   function draw_arc_tile(a:ArcTile, shape_pos:Vector2) {
-    draw_line(shape_pos.x - a.width * 0.5, shape_pos.y - a.height * 0.5, shape_pos.x - a.width * 0.5, shape_pos.y + a.height * 0.5,
-      a.collided ? shape_collided_color : shape_color);
-    draw_line(shape_pos.x - a.width * 0.5, shape_pos.y + a.height * 0.5, shape_pos.x + a.width * 0.5, shape_pos.y + a.height * 0.5,
-      a.collided ? shape_collided_color : shape_color);
-    draw_bezier(a.arc, shape_pos, a.collided ? shape_collided_color : shape_color, true);
+    if (a.transformed_rect != null && a.rotation != 0) {
+      draw_circle(a.transformed_rect.vertices[0].x, a.transformed_rect.vertices[0].y, 2, 0xff66ff);
+      draw_circle(a.transformed_rect.vertices[1].x, a.transformed_rect.vertices[1].y, 2, 0xffaa22);
+      draw_circle(a.transformed_rect.vertices[2].x, a.transformed_rect.vertices[2].y, 2, 0xaaffee);
+      draw_circle(a.transformed_rect.vertices[3].x, a.transformed_rect.vertices[3].y, 2, 0x0000ee);
+      draw_line(a.transformed_rect.vertices[0].x, a.transformed_rect.vertices[0].y, a.transformed_rect.vertices[3].x, a.transformed_rect.vertices[3].y,
+        a.collided ? shape_collided_color : shape_color);
+      draw_line(a.transformed_rect.vertices[3].x, a.transformed_rect.vertices[3].y, a.transformed_rect.vertices[2].x, a.transformed_rect.vertices[2].y,
+        a.collided ? shape_collided_color : shape_color);
+      draw_bezier(a.arc, shape_pos, a.collided ? shape_collided_color : shape_color);
+    }
+    else {
+      draw_line(shape_pos.x - a.width * 0.5, shape_pos.y - a.height * 0.5, shape_pos.x - a.width * 0.5, shape_pos.y + a.height * 0.5,
+        a.collided ? shape_collided_color : shape_color);
+      draw_line(shape_pos.x - a.width * 0.5, shape_pos.y + a.height * 0.5, shape_pos.x + a.width * 0.5, shape_pos.y + a.height * 0.5,
+        a.collided ? shape_collided_color : shape_color);
+      draw_bezier(a.arc, shape_pos, a.collided ? shape_collided_color : shape_color);
+    }
   }
 
   function draw_rect_helper(r:Rect, shape_pos:Vector2) {

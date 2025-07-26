@@ -33,7 +33,9 @@ class Shape #if cog implements cog.IComponent #end {
           options.scale_y);
         else s = Polygon.get(options.offset_x, options.offset_y, options.sides, options.radius, options.rotation, options.scale_x, options.scale_y);
       case ARC_TILE:
-        s = ArcTile.get(options.offset_x, options.offset_y, options.width, options.height, options.rotation, options.scale_x, options.scale_y);
+        // trace('rot at shape get: ${options.rotation}');
+        s = ArcTile.get(options.offset_x, options.offset_y, options.width, options.height, options.rotation, options.scale_x, options.scale_y,
+          options.curvature);
     }
     s.solid = options.solid;
     return s;

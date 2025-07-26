@@ -77,11 +77,10 @@ class Physics {
    * @param b the second `Body` in the Collision
    * @param cd Data related to the Collision
    */
-  public static inline function resolve(a:Body, b:Body, cd:CollisionData, correction_threshold:Float = 0.013, percent_correction:Float = 0.9,
-      advanced:Bool = false) {
+  public static function resolve(a:Body, b:Body, cd:CollisionData, correction_threshold:Float = 0.013, percent_correction:Float = 0.9, advanced:Bool = false) {
     // trace('resolving: ${cd}');
 
-    // Do not resolve if either objects arent solid
+    // Do not resolve if either objects aren't solid
     if (!cd.sa.solid || !cd.sb.solid || !a.active || !b.active || a.disposed || b.disposed || a.is_static() && b.is_static()) return;
 
     // trace('calcin vel');
@@ -137,12 +136,16 @@ class Physics {
     var cx = correction * cd.normal.x;
     var cy = correction * cd.normal.y;
     if (!a.kinematic) {
-      a.x -= a.inverse_mass * cx;
-      a.y -= a.inverse_mass * cy;
+      var acx = a.inverse_mass * cx;
+      var acy = a.inverse_mass * cy;
+      if (acx > 0) a.x -= acx;
+      if (acy > 0) a.y -= acy;
     }
     if (!b.kinematic) {
-      b.x += b.inverse_mass * cx;
-      b.y += b.inverse_mass * cy;
+      var bcx = b.inverse_mass * cx;
+      var bcy = b.inverse_mass * cy;
+      if (bcx > 0) b.x += bcx;
+      if (bcy > 0) b.y += bcy;
     }
   }
 
