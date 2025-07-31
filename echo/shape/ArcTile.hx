@@ -162,7 +162,7 @@ class ArcTile extends Rect {
       }
     }
 
-    Main.instance.debug.draw_line(c.x, c.y, closestPoint.x, closestPoint.y, 0xffff00);
+    // Main.instance.debug.draw_line(c.x, c.y, closestPoint.x, closestPoint.y, 0xffff00);
 
     if (minDist == Math.POSITIVE_INFINITY) {
       return null;
